@@ -128,35 +128,38 @@ def doprocess(argv):
 			counter=0
 			for x in files:
 				if counter <= filelimit:
-					print "["+str(counter)+"/"+str(filelimit)+"] " + x
+					print "["+str(counter+1)+"/"+str(filelimit)+"] " + x
 					getfile=downloader.downloader(x,dir)
 					getfile.down()
 					filename=getfile.name()	
-					if filename !="":
-						if filetype == "pdf":
-							test=metadataPDF.metapdf(dir+"/"+filename,password)
-						elif filetype == "doc" or filetype == "ppt" or filetype == "xls":
-							test=metadataMSOffice.metaMs2k(dir+"/"+filename)	
-							if os.name=="posix":
-								testex=metadataExtractor.metaExtractor(dir+"/"+filename)
-						elif filetype == "docx" or filetype == "pptx" or filetype == "xlsx":
-							test=metadataMSOfficeXML.metaInfoMS(dir+"/"+filename)
-						res=test.getData()
-						if res=="ok":
-							raw=test.getRaw()
-							users=test.getUsers()
-							paths=test.getPaths()
-							soft=test.getSoftware()
-							if (filetype == "doc" or filetype == "xls" or filetype == "ppt") and os.name=="posix":
-								testex.runExtract()
-								testex.getData()
-								paths.extend(testex.getPaths())
-							respack=[x,users,paths,soft,raw]
-							all.append(respack)
+					try:
+						if filename !="":
+							if filetype == "pdf":
+								test=metadataPDF.metapdf(dir+"/"+filename,password)
+							elif filetype == "doc" or filetype == "ppt" or filetype == "xls":
+								test=metadataMSOffice.metaMs2k(dir+"/"+filename)	
+								if os.name=="posix":
+									testex=metadataExtractor.metaExtractor(dir+"/"+filename)
+							elif filetype == "docx" or filetype == "pptx" or filetype == "xlsx":
+								test=metadataMSOfficeXML.metaInfoMS(dir+"/"+filename)
+							res=test.getData()
+							if res=="ok":
+								raw=test.getRaw()
+								users=test.getUsers()
+								paths=test.getPaths()
+								soft=test.getSoftware()
+								if (filetype == "doc" or filetype == "xls" or filetype == "ppt") and os.name=="posix":
+									testex.runExtract()
+									testex.getData()
+									paths.extend(testex.getPaths())
+								respack=[x,users,paths,soft,raw]
+								all.append(respack)
+							else:
+								print "error" #A error in the parsing process
 						else:
-							print "error" #A error in the parsing process
-					else:
-						print "pass"
+							print "pass"
+					except Exception, e:
+						print("ERROR: "+str(e))
 					counter+=1
 	else:
 		print "[-] Starting local analysis in directory " + dir
