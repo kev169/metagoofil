@@ -19,7 +19,7 @@ class search_google:
 		
 	def do_search_files(self):
 		h = httplib.HTTP(self.server)
-		h.putrequest('GET', "/search?num="+self.quantity+"&start=" + str(self.counter) + "&hl=en&meta=&q=filetype:"+self.filetype+"%20site:" + self.word)
+		h.putrequest('GET', "/search?complete=0&num="+self.quantity+"&start=" + str(self.counter) + "&hl=en&meta=&q=filetype:"+self.filetype+"%20site:" + self.word)
 		h.putheader('Host', self.hostname)
 		h.putheader('User-agent', self.userAgent)	
 		h.endheaders()
